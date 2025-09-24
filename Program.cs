@@ -4,6 +4,10 @@ List<IUser> users = new List<IUser>();
 //test användare
 users.Add(new User("test", "test", "testuser"));
 
+List<Item> item = new List<Item>();
+//test item
+item.Add(new Item("testnamn", "testtext"));
+
 IUser? activeUser = null; //ser till att användare är null(inte finns)
 
 bool running = true;
