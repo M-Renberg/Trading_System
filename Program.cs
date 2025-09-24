@@ -38,6 +38,8 @@ while (running)
                         break;
                     }
                 }
+                        System.Console.WriteLine("logged in " + (activeUser != null));
+                        Console.ReadLine();
                 break;
 
             case "2":
@@ -51,6 +53,7 @@ while (running)
                 break;
 
             case "3":
+                running = false;
                 break;
         }
     }

@@ -7,15 +7,21 @@ class User : IUser
     public string Email; //för inloggning
     string _password;   //för inloggning
 
-    public User(string username, string email, string password)
+    public User(string email, string password, string username)
     {
-        Username = username;
         Email = email;
         _password = password;
+        Username = username;
     }
 
     public bool TryLogin(string email, string password)
     {
         return email == Email && password == _password;
     }
+
+    public override string ToString() //test för att försöka displaya användarnamn
+    {
+        return Username;
+    }
+
 }
