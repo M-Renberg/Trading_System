@@ -1,4 +1,8 @@
-﻿using App;
+﻿using System.Diagnostics;
+using App;
+
+
+// Item item = new Item();
 
 List<IUser> users = new List<IUser>();
 //test användare
@@ -6,7 +10,7 @@ users.Add(new User("test", "test", "testuser"));
 
 List<Item> item = new List<Item>();
 //test item
-item.Add(new Item("testnamn", "testtext"));
+item.Add(new Item("testnamn", "testtext", "testuser"));
 
 IUser? activeUser = null; //ser till att användare är null(inte finns)
 
@@ -25,6 +29,8 @@ while (running)
 
         string? input = Console.ReadLine();
 
+        Debug.Assert(input != null);
+
         switch (input)
         {
             case "1":
@@ -36,14 +42,12 @@ while (running)
 
                 foreach (IUser user in users) //login funktion
                 {
-                    if (user.TryLogin(inputEmail, inputPassword))
+                    if (user.TryLogin(inputEmail!, inputPassword!))
                     {
                         activeUser = user;
                         break;
                     }
                 }
-                // System.Console.WriteLine("logged in " + (activeUser != null)); //bara för att testa log in
-                // Console.ReadLine();
                 break;
 
             case "2": //skapa ny användare
@@ -55,14 +59,14 @@ while (running)
                 System.Console.WriteLine("Please enter the username you would like to display:");
                 string? inputNewUsername = Console.ReadLine();
 
-                users.Add(new User(inputNewEmail, inputNewPassword, inputNewUsername)); //lägger till i lista
+                users.Add(new User(inputNewEmail!, inputNewPassword!, inputNewUsername!)); //lägger till i lista
 
                 System.Console.WriteLine("A new user has been created");
                 System.Console.WriteLine($"You can now login as {inputNewUsername}"); //bara extra så det ser snyggare ut
                 Console.ReadLine();
                 break;
 
-            case "3": // stränga programmet
+            case "3": // stänga programmet
                 running = false;
                 break;
             default:
@@ -79,6 +83,23 @@ while (running)
         switch (input)
         {
             case "1": //lägga till nytt item för trade
+
+                System.Console.WriteLine("Add Item for trade");
+                System.Console.WriteLine("Please enter the name of the item:");
+                string? itemName = Console.ReadLine();
+                System.Console.WriteLine("Please enter a short description of the item:");
+                string? itemDescription = Console.ReadLine();
+                System.Console.WriteLine($"You have added item {itemName}");
+                System.Console.WriteLine("With description:");
+                System.Console.WriteLine(itemDescription);
+
+                System.Console.WriteLine("Are you satisfied or would you like to change something?");
+                System.Console.WriteLine("Type yes or no");
+                string? itemAddChoice = Console.ReadLine();
+
+                //item.addItem(itemName, itemDescription, activeUser.ToString());
+                item.Add(new Item(itemName!, itemDescription!, activeUser.ToString()!));
+
                 break;
             case "2": // se vilka Items du har lagt upp
                 break;
