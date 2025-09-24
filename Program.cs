@@ -1,6 +1,9 @@
 ﻿using App;
 
 
+//test användare
+User testuser = new User("test", "test", "testuser");
+
 bool running = true;
 
 while (running)

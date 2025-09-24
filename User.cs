@@ -1,6 +1,6 @@
 namespace App;
 
-class User
+class User : IUser
 {
 
     public string Username; // name som vissas 
@@ -12,5 +12,10 @@ class User
         Username = username;
         Email = email;
         _password = password;
+    }
+
+    public bool TryLogin(string username, string password)
+    {
+        return username == Username && password == _password;
     }
 }
