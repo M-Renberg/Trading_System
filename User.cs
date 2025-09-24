@@ -14,8 +14,8 @@ class User : IUser
         _password = password;
     }
 
-    public bool TryLogin(string username, string password)
+    public bool TryLogin(string email, string password)
     {
-        return username == Username && password == _password;
+        return email == Email && password == _password;
     }
 }
