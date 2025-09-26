@@ -104,22 +104,34 @@ while (running)
                 System.Console.WriteLine("With description:");
                 System.Console.WriteLine(itemDescription);
 
+                System.Console.WriteLine($"You want to add item {itemName} with description: {itemDescription}");
                 System.Console.WriteLine("Are you satisfied or would you like to change something?");
-                System.Console.WriteLine("Type yes or no");
+                System.Console.WriteLine("1. Make no changes and upload item");
+                System.Console.WriteLine("2. Make changes");
                 string? itemAddChoice = Console.ReadLine();
 
-                //item.addItem(itemName, itemDescription, activeUser.ToString());
-                item.Add(new Item(itemName!, itemDescription!, activeUser.ToString()!));
+                if (itemAddChoice == "1")
+                {
+                    item.Add(new Item(itemName!, itemDescription!, activeUser.ToString()!));
+                    break;
+                }
+
+                else if (itemAddChoice == "2")
+                {
+                    continue;
+                }
+
+                //item.Add(new Item(itemName!, itemDescription!, activeUser.ToString()!));
 
                 break;
             case "2": // se vilka Items du har lagt upp
-                System.Console.WriteLine("Browes items for trade:");
+                System.Console.WriteLine("Here are all items you have uploaded for trade:");
 
-                if (activeUser is User userItems)
+                if (activeUser is User userItems) //kollar så att activeUser är en User och ger mig en variabel att jobba med
                 {
-                    foreach (Item i in item)
+                    foreach (Item i in item) //foreach loop för att loopa igen listan med items
                     {
-                        if (userItems.Username == i.Owner)
+                        if (userItems.Username == i.Owner) //kollar på att användaren har samma namn som ägaren av ett item
                         {
                             System.Console.WriteLine($"{i.Name}, {i.Description}, {i.Owner}");
                         }
@@ -133,6 +145,7 @@ while (running)
             case "3": // meddelande om trade
                 break;
             case "4": //leta efter items
+                System.Console.WriteLine("");
 
                 break;
             case "9": //logga ut
