@@ -16,6 +16,7 @@ item.Add(new Item("testnamn", "testtext", "testuser"));
 IUser? activeUser = null; //ser till att användare är null(inte finns)
 
 bool running = true;
+bool addingRun = true;
 
 while (running)
 {
@@ -94,7 +95,9 @@ while (running)
         switch (input)
         {
             case "1": //lägga till nytt item för trade
-
+                while (addingRun)
+                {
+                    
                 System.Console.WriteLine("Add Item for trade");
                 System.Console.WriteLine("Please enter the name of the item:");
                 string? itemName = Console.ReadLine(); //name på item
@@ -113,6 +116,7 @@ while (running)
                 if (itemAddChoice == "1")
                 {
                     item.Add(new Item(itemName!, itemDescription!, activeUser.ToString()!));
+                    
                     break;
                 }
 
@@ -120,6 +124,8 @@ while (running)
                 {
                     continue;
                 }
+            }
+                
 
                 //item.Add(new Item(itemName!, itemDescription!, activeUser.ToString()!));
 
