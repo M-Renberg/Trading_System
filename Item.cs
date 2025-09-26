@@ -4,7 +4,7 @@ class Item
 {
     public string Name;
     public string Description;
-    public string Owner;
+    public string Owner; // vill kunna lägga till med som ägare till produkten man ska byta
 
     // List<Item> items = new List<Item>();
 
@@ -16,7 +16,7 @@ class Item
         Owner = owner;
     }
 
-    // public void showItems()
+    // public void showItems() //detta blev kaos.... 
     // {
 
     // }
