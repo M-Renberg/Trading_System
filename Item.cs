@@ -6,7 +6,7 @@ class Item
     public string Description;
     public string Owner; // vill kunna lägga till med som ägare till produkten man ska byta
 
-    // List<Item> items = new List<Item>();
+
 
 
     public Item(string name, string description, string owner)
@@ -16,13 +16,5 @@ class Item
         Owner = owner;
     }
 
-    // public void showItems() //detta blev kaos.... 
-    // {
 
-    // }
-
-    // public void addItem(string itemName,string itemDescription, string itemOwner)
-    // {
-    //     //item.Add(new Item(itemName, itemDescription, activeUser.ToString());
-    // }
 }
