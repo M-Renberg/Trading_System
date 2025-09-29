@@ -2,7 +2,7 @@ using System.Buffers;
 
 namespace App;
 
-class User : IUser
+class User //: IUser
 {
 
     public string Username; // name som vissas 
@@ -63,12 +63,14 @@ class User : IUser
 
     public void ShowOwnItem()
     {
-                    foreach (Item i in ItemList) //foreach loop för att loopa igen listan med items
-                    {
+        foreach (Item i in ItemList) //foreach loop för att loopa igen listan med items
+        {
 
-                         System.Console.WriteLine($"{i.Name}, {i.Description}, {i.Owner}");
+            System.Console.WriteLine($"{i.Name}, {i.Description}, {i.Owner}");
 
-                    }
+        }
     }
+    
+
 
 }

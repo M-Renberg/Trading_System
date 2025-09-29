@@ -1,10 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using App;
 
+//string userDataFile = "./data/Userdate.json";
 
+List<User> users = new List<User>();
 
-List<IUser> users = new List<IUser>();
+//string json = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true });
+//File.AppendAllText(userDataFile, json);
 //test användare
 
 User testuser1 = new User("test", "test", "testuser");
@@ -13,13 +17,11 @@ User testuser2 = new User("arne", "arne", "arne aligator");
 users.Add(testuser1);
 users.Add(testuser2);
 
-//List<Item> item = new List<Item>();
 //test item
-//item.Add(new Item("testnamn", "testtext", "testuser"));
 testuser1.ItemList.Add(new Item("testnamn", "testtext", "testuser"));
 
 //var itemId = item.ElementAt(0);
-IUser? activeUser = null; //ser till att användare är null(inte finns)
+User? activeUser = null; //ser till att användare är null(inte finns)
 
 bool running = true;
 
@@ -50,7 +52,7 @@ while (running)
                 System.Console.WriteLine("Please write your password:");
                 string? inputPassword = Console.ReadLine();
 
-                foreach (IUser user in users) //letar och gemför sparade användare
+                foreach (User user in users) //letar och gemför sparade användare
                 {
                     if (user.TryLogin(inputEmail!, inputPassword!))
                     {
@@ -100,54 +102,13 @@ while (running)
         switch (input)
         {
             case "1": //lägga till nytt item för trade
-                      //     while (addingRun)
-                      //     {
-
-                //     System.Console.WriteLine("Add Item for trade");
-                //     System.Console.WriteLine("Please enter the name of the item:");
-                //     string? itemName = Console.ReadLine(); //name på item
-                //     System.Console.WriteLine("Please enter a short description of the item:");
-                //     string? itemDescription = Console.ReadLine();// beskriving av item
-                //     System.Console.WriteLine($"You have added item {itemName}");
-                //     System.Console.WriteLine("With description:");
-                //     System.Console.WriteLine(itemDescription);
-
-                //     System.Console.WriteLine($"You want to add item {itemName} with description: {itemDescription}");
-                //     System.Console.WriteLine("Are you satisfied or would you like to change something?");
-                //     System.Console.WriteLine("1. Make no changes and upload item");
-                //     System.Console.WriteLine("2. Make changes");
-                //     string? itemAddChoice = Console.ReadLine();
-
-                //     if (itemAddChoice == "1")
-                //     {
-                //         User.Itemlist.Add(new Item(itemName!, itemDescription!, activeUser.ToString()!));
-
-                //         break;
-                //     }
-
-                //     else if (itemAddChoice == "2")
-                //     {
-                //         continue;
-                //     }
-                // }
-
-
-                activeUser.AddItem(); //1061?????????????
+             
+                activeUser.AddItem(); //1061????????????? googla fram att jag kunde inte använda user.additem för fick fel meddelande. när jag testa activeUser fick jag också det. fick fram att jag kunde lägga till metodernas namn i IUser för att kunna kalla på dom som den inloggade användaren.
 
                 break;
             case "2": // se vilka Items du har lagt upp
                 System.Console.WriteLine("Here are all items you have uploaded for trade:");
 
-                // if (activeUser is User userItems) //kollar så att activeUser är en User och ger mig en variabel att jobba med
-                // {
-                //     foreach (Item i in item) //foreach loop för att loopa igen listan med items
-                //     {
-                //         if (userItems.Username == i.Owner) //kollar på att användaren har samma namn som ägaren av ett item
-                //         {
-                //             System.Console.WriteLine($"{i.Name}, {i.Description}, {i.Owner}");
-                //         }
-                //     }
-                // }
                 activeUser.ShowOwnItem();
 
                 
@@ -161,29 +122,40 @@ while (running)
 
 
                 int selectId = 0; //för att man ska se på vilken plats i item listan något ligger
-                foreach (Item i in item) //loop fram listan
-                {
 
-                    System.Console.WriteLine($"Item id: {selectId}, Name: {i.Name}, Description: {i.Description}, Owner: {i.Owner}");
-                    selectId++; // plus för varje gång loopen går
+                foreach (User user in users)
+                {
+                    foreach (Item item in user.ItemList)
+                    {
+                        System.Console.WriteLine($"Item id: {selectId}, Name: {item.Name}, Description: {item.Description}, Owner: {item.Owner}");
+
+                    }
+
+                    System.Console.WriteLine("write the Owner you wish to trade with:");
+                    string? input_trade = Console.ReadLine();
+
+                    if (input_trade == user.Username)
+                    {
+
+                        System.Console.WriteLine($"You have selected: {user.Username}");
+                        System.Console.WriteLine("select the item id you want to trade:");
+                        string? input_trade_id = Console.ReadLine();
+                        int.TryParse(input_trade_id, out int input_trade_id_int);
+
+                        System.Console.WriteLine($"you wish to trade with {user.Username} and item {user.ItemList[input_trade_id_int].Name}");
+
+                        System.Console.WriteLine("select one of ypur items you wish to trade with:");
+                        activeUser.ShowOwnItem();
+
+
+                    }
+
                 }
 
-                System.Console.WriteLine(" ");
-                System.Console.WriteLine("Select item id of the item you would like to trade:");
-                string? selectInput = Console.ReadLine(); //input som ska användas till att list plats
+                
 
-                int.TryParse(selectInput, out int selectInput_id); //gör om input till en int
-        
-
-                Console.WriteLine("You have selected:");
-                Console.WriteLine($"{item[selectInput_id].Name}, {item[selectInput_id].Description}, {item[selectInput_id].Owner}");
                 Console.ReadLine();
 
-                System.Console.WriteLine("select the item id of you own items you wish to trade with:");
-                string? selectInput_two = Console.ReadLine();
-                int.TryParse(selectInput_two, out int selectInput_id_two);
-                    
-                    
                 break;
             case "4": // meddelande om trade
                 System.Console.WriteLine("");
