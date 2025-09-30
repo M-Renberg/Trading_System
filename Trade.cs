@@ -2,7 +2,7 @@ namespace App;
 
 class Trade
 {
-    enum ItemStatus
+    public enum TradeStatus
     {
         None,
         Accepted,
@@ -10,6 +10,26 @@ class Trade
         Denied,
     }
 
-    List<Item> TradingList = new List<Item>();
-    
+
+
+    public string FromUser;
+    public string ToUser;
+    public string FromUserItem;
+    public string ToUserItem;
+
+    public TradeStatus Status;
+
+
+    public Trade(string fromuser, string touser, string fromuseritem, string touseritem)
+    {
+        FromUser = fromuser;
+        ToUser = touser;
+        FromUserItem = fromuseritem;
+        ToUserItem = touseritem;
+
+        Status = TradeStatus.Pending;
+
+
+    }
+
 }

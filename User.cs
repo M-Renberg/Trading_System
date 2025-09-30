@@ -63,10 +63,11 @@ class User //: IUser
 
     public void ShowOwnItem()
     {
+        int itemID = 0;
         foreach (Item i in ItemList) //foreach loop för att loopa igen listan med items
         {
 
-            System.Console.WriteLine($"{i.Name}, {i.Description}, {i.Owner}");
+            System.Console.WriteLine($"Item id: {itemID}, Name: {i.Name}, Description: {i.Description}, Owner: {i.Owner}");
 
         }
     }

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using App;
@@ -6,6 +8,8 @@ using App;
 //string userDataFile = "./data/Userdate.json";
 
 List<User> users = new List<User>();
+
+List<Item> TradingListPending = new List<Item>();
 
 //string json = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true });
 //File.AppendAllText(userDataFile, json);
@@ -130,25 +134,36 @@ while (running)
                         System.Console.WriteLine($"Item id: {selectId}, Name: {item.Name}, Description: {item.Description}, Owner: {item.Owner}");
 
                     }
+                }
 
+                
                     System.Console.WriteLine("write the Owner you wish to trade with:");
                     string? input_trade = Console.ReadLine();
 
-                    if (input_trade == user.Username)
+                var userTrade = users.FirstOrDefault(i => i.Username == input_trade);
+
+                if (userTrade != null)
+                {
+
+                    System.Console.WriteLine($"You have selected: {userTrade.Username}");
+                    System.Console.WriteLine("select the item id you want to trade:");
+                    string? input_trade_id = Console.ReadLine();
+                    int.TryParse(input_trade_id, out int input_trade_id_int);
+
+                    System.Console.WriteLine($"you wish to trade with {userTrade.Username} and item {userTrade.ItemList[input_trade_id_int].Name}");
+
+                    System.Console.WriteLine("select one of ypur items you wish to trade with:");
+                    activeUser.ShowOwnItem();
+
+                    string? input_trader = Console.ReadLine();
+
+                    if (int.TryParse(input_trader, out int input_trader_int) && input_trader != null)
                     {
-
-                        System.Console.WriteLine($"You have selected: {user.Username}");
-                        System.Console.WriteLine("select the item id you want to trade:");
-                        string? input_trade_id = Console.ReadLine();
-                        int.TryParse(input_trade_id, out int input_trade_id_int);
-
-                        System.Console.WriteLine($"you wish to trade with {user.Username} and item {user.ItemList[input_trade_id_int].Name}");
-
-                        System.Console.WriteLine("select one of ypur items you wish to trade with:");
-                        activeUser.ShowOwnItem();
-
-
+                        TradingListPending.Add(new Item(userTrade.ItemList[input_trade_id_int].Name, userTrade.ItemList[input_trade_id_int].Description, userTrade.ItemList[input_trade_id_int].Owner));
+                        TradingListPending.Add(new Item(activeUser.ItemList[input_trader_int].Name, activeUser.ItemList[input_trader_int].Description, activeUser.ItemList[input_trader_int].Owner));
                     }
+
+                    System.Console.WriteLine("The Trade is now pending");
 
                 }
 
@@ -158,9 +173,29 @@ while (running)
 
                 break;
             case "4": // meddelande om trade
-                System.Console.WriteLine("");
 
-                break;
+                System.Console.WriteLine("see you pending, Accepted, trades:");
+                System.Console.WriteLine("1 for pending");
+
+                string? input_see_trade = Console.ReadLine();
+
+                switch (input_see_trade)
+                {
+                
+                case "1":
+                    System.Console.WriteLine("here are you pending trades:");
+
+                        foreach (Item i in TradingListPending)
+                        {
+                        System.Console.WriteLine($"name: {i.Name}, description: {i.Description}");
+                        }
+                        Console.ReadLine();
+                break;    
+                }
+
+
+
+            break;
             case "9": //logga ut
                 activeUser = null;
                 break;
