@@ -5,24 +5,28 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using App;
 
-//string userDataFile = "./data/Userdate.json";
+
 
 List<User> users = new List<User>();
+List<Trade> tradingList = new List<Trade>();
 
-List<Item> TradingListPending = new List<Item>();
 
-//string json = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true });
-//File.AppendAllText(userDataFile, json);
+//List<Item> TradingListPending = new List<Item>();
+
+
 //test användare
 
 User testuser1 = new User("test", "test", "testuser");
 User testuser2 = new User("arne", "arne", "arne aligator");
+User testuser3 = new User("hej", "hej", "hejsan");
 
 users.Add(testuser1);
 users.Add(testuser2);
+users.Add(testuser3);
 
 //test item
-testuser1.ItemList.Add(new Item("testnamn", "testtext", "testuser"));
+testuser1.ItemList.Add(new Item("testnamn", "testtext", testuser1.Username));
+testuser3.ItemList.Add(new Item("godis", "1kg", testuser3.Username));
 
 //var itemId = item.ElementAt(0);
 User? activeUser = null; //ser till att användare är null(inte finns)
@@ -93,6 +97,7 @@ while (running)
     else // menyn när man är inloggad
     {   
         try{Console.Clear();}catch{} 
+
         System.Console.WriteLine("Welcome to The Trading System");
         System.Console.WriteLine($"You're logged in as {activeUser}"); //kolla vem som är inloggad
         System.Console.WriteLine(" ");
@@ -107,69 +112,76 @@ while (running)
         {
             case "1": //lägga till nytt item för trade
              
-                activeUser.AddItem(); //1061????????????? googla fram att jag kunde inte använda user.additem för fick fel meddelande. när jag testa activeUser fick jag också det. fick fram att jag kunde lägga till metodernas namn i IUser för att kunna kalla på dom som den inloggade användaren.
+                activeUser.AddItem();
 
                 break;
             case "2": // se vilka Items du har lagt upp
+
                 System.Console.WriteLine("Here are all items you have uploaded for trade:");
-
-                activeUser.ShowOwnItem();
-
-                
+                activeUser.ShowOwnItem();                
                 Console.ReadLine();
 
                 break;
-            case "3":  //leta efter items
+            case "3":  //trade system
 
-                System.Console.WriteLine("Here are all the items that are available for trade:");
+                System.Console.WriteLine("Here are all the items avaliable for trade:");
+
+                foreach (User user in users) //loopa igenom alla användare
+                {
+                    foreach (Item item in user.ItemList) //loopa igenom användares items
+                    {
+                        if (user != activeUser) //kolla att användaren inte är den som är inloggad för att slippa se sina egna items
+                        {
+                            System.Console.WriteLine($"Name: {item.Name}, Description: {item.Description}, Owner: {item.Owner}");
+                        }
+                    }
+                }
+
+                System.Console.WriteLine("Select the user you would like to trade with:");
+                string? selectUserForTrade = Console.ReadLine(); //val av användare att byta med
+
+                var userToTrade = users.FirstOrDefault(u => u.Username == selectUserForTrade); //gör valet till en variabel
+
+                foreach (Item item in userToTrade.ItemList) //vissa den valda användarens items
+                {
+                    System.Console.WriteLine($"Name: {item.Name}, Description: {item.Description}, Owner: {item.Owner}");
+                }
+
+                System.Console.WriteLine("Write the name of the item you wish to trade");
+
+                string? selectItem = Console.ReadLine(); //val an item
+
+                var itemToTrade = userToTrade.ItemList.FirstOrDefault(i => i.Name == selectItem); //gör item till en variable
+
+                System.Console.WriteLine($"You have selected {itemToTrade.Name} from user {userToTrade}"); //sanity check för att kolla att valet blev rätt
+
                 System.Console.WriteLine(" ");
 
 
-                int selectId = 0; //för att man ska se på vilken plats i item listan något ligger
-
-                foreach (User user in users)
+                foreach (Item item in activeUser.ItemList) //loopa fram ens egna items
                 {
-                    foreach (Item item in user.ItemList)
-                    {
-                        System.Console.WriteLine($"Item id: {selectId}, Name: {item.Name}, Description: {item.Description}, Owner: {item.Owner}");
-
-                    }
+                    System.Console.WriteLine($"Name: {item.Name}, Description: {item.Description}");
                 }
 
-                
-                    System.Console.WriteLine("write the Owner you wish to trade with:");
-                    string? input_trade = Console.ReadLine();
+                System.Console.WriteLine("select on of your own items you wish to trade with");
+                string? itemForTrade = Console.ReadLine(); //val
 
-                var userTrade = users.FirstOrDefault(i => i.Username == input_trade);
+                var ownForTrade = activeUser.ItemList.FirstOrDefault(u => u.Name == itemForTrade); //gör till variable
 
-                if (userTrade != null)
-                {
+                //gör om allt till strängar så jag kan lägga in det i en trade class
+                string? fromusertrad = activeUser.Username;
+                string? tousertrade = userToTrade.Username;
+                string? toitemtrade = itemToTrade.Name;
+                string? fromitemtrade = ownForTrade.Name;
 
-                    System.Console.WriteLine($"You have selected: {userTrade.Username}");
-                    System.Console.WriteLine("select the item id you want to trade:");
-                    string? input_trade_id = Console.ReadLine();
-                    int.TryParse(input_trade_id, out int input_trade_id_int);
+                //lägg till i en trading lista
+                tradingList.Add(new Trade(fromusertrad, tousertrade, fromitemtrade, toitemtrade));
 
-                    System.Console.WriteLine($"you wish to trade with {userTrade.Username} and item {userTrade.ItemList[input_trade_id_int].Name}");
-
-                    System.Console.WriteLine("select one of ypur items you wish to trade with:");
-                    activeUser.ShowOwnItem();
-
-                    string? input_trader = Console.ReadLine();
-
-                    if (int.TryParse(input_trader, out int input_trader_int) && input_trader != null)
-                    {
-                        TradingListPending.Add(new Item(userTrade.ItemList[input_trade_id_int].Name, userTrade.ItemList[input_trade_id_int].Description, userTrade.ItemList[input_trade_id_int].Owner));
-                        TradingListPending.Add(new Item(activeUser.ItemList[input_trader_int].Name, activeUser.ItemList[input_trader_int].Description, activeUser.ItemList[input_trader_int].Owner));
-                    }
-
-                    System.Console.WriteLine("The Trade is now pending");
-
-                }
-
-                
-
+                System.Console.WriteLine("trade request is now sent");
                 Console.ReadLine();
+
+
+
 
                 break;
             case "4": // meddelande om trade
@@ -185,11 +197,55 @@ while (running)
                 case "1":
                     System.Console.WriteLine("here are you pending trades:");
 
-                        foreach (Item i in TradingListPending)
+                        int tradeSerialNum = 0;
+
+                        foreach (Trade trade in tradingList) //loopa igenom trade listan
                         {
-                        System.Console.WriteLine($"name: {i.Name}, description: {i.Description}");
+                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Pending) //kolla så att det är trades som är skicka till en och att dom är pending
+                            {
+                                System.Console.WriteLine($"Trade nr: {tradeSerialNum} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                            }
+
+                            tradeSerialNum++;
                         }
+
+                        System.Console.WriteLine("select trade nr to accept or deny trade");
+
+                        string? input_pending = Console.ReadLine();
+                        int.TryParse(input_pending, out int input_pending_int);
+
+                        foreach (Trade trade in tradingList) //loopa igenom trade listan
+                        {
+                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Pending) //kolla så att det är trades som är skicka till en och att dom är pending
+                            {
+                                if (input_pending_int == tradeSerialNum)
+                                {
+                                    System.Console.WriteLine($"Trade nr: {tradeSerialNum} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                                    System.Console.WriteLine("Will you accept or deny this trade?");
+                                    System.Console.WriteLine("1. for accept");
+                                    System.Console.WriteLine("2. for deny");
+                                    string? input_acceptdeny = Console.ReadLine();
+
+                                    if (input_acceptdeny == "1")
+                                    {
+                                        System.Console.WriteLine("you have accpted the rade");
+                                        trade.Status = Trade.TradeStatus.Accepted;
+                                    }
+                                    else if (input_acceptdeny == "2")
+                                    {
+                                        System.Console.WriteLine("you have denied the trade");
+                                        trade.Status = Trade.TradeStatus.Denied;
+                                    }
+                                    
+                                }
+                                tradeSerialNum++;
+                            }
+                        }
+
                         Console.ReadLine();
+
+
+                    Console.ReadLine();
                 break;    
                 }
 
