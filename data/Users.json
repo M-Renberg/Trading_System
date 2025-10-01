@@ -1,0 +1,56 @@
+[
+  {
+    "Username": null,
+    "Email": null,
+    "_password": null,
+    "ItemList": []
+  },
+  {
+    "Username": null,
+    "Email": null,
+    "_password": null,
+    "ItemList": []
+  },
+  {
+    "Username": null,
+    "Email": null,
+    "_password": null,
+    "ItemList": []
+  },
+  {
+    "Username": "testuser",
+    "Email": "test",
+    "_password": "test",
+    "ItemList": [
+      {
+        "Name": "testnamn",
+        "Description": "testtext",
+        "Owner": "testuser"
+      }
+    ]
+  },
+  {
+    "Username": "arne aligator",
+    "Email": "arne",
+    "_password": "arne",
+    "ItemList": []
+  },
+  {
+    "Username": "hejsan",
+    "Email": "hej",
+    "_password": "hej",
+    "ItemList": [
+      {
+        "Name": "godis",
+        "Description": "1kg",
+        "Owner": "hejsan"
+      }
+    ]
+  },
+  {
+    "Username": "pelle",
+    "Email": "pelle",
+    "_password": "pelle",
+    "ItemList": []
+  }
+]

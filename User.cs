@@ -7,9 +7,10 @@ class User //: IUser
 
     public string Username; // name som vissas 
     public string Email; //för inloggning
-    string _password;   //för inloggning
+    public string _password;   //för inloggning
     public List<Item> ItemList = new List<Item>();
 
+    public User () {}
     public User(string email, string password, string username)
     {
         Email = email;

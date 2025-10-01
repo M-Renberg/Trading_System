@@ -6,12 +6,38 @@ using System.Text.Json;
 using App;
 
 
-
+//string userData = "./data/Users.Json";
 List<User> users = new List<User>();
+//string loadUsers = File.ReadAllText(userData);
+//users = JsonSerializer.Deserialize<List<User>>(loadUsers);
+
+//string tradeData = "./data/Trades.json";
 List<Trade> tradingList = new List<Trade>();
+//string loadTrades = File.ReadAllText(tradeData);
+//tradingList = JsonSerializer.Deserialize<List<Trade>>(loadTrades);
+
+//string dataDir = Path.Combine(AppContext.BaseDirectory, "data");
+//Directory.CreateDirectory(dataDir);
+
+string dataDir = Path.Combine(Directory.GetCurrentDirectory(), "data");
 
 
-//List<Item> TradingListPending = new List<Item>();
+string userData = Path.Combine(dataDir, "Users.json");
+string tradeData = Path.Combine(dataDir, "Trades.json");
+
+if (File.Exists(userData))
+{
+    string loadUsers = File.ReadAllText(userData);
+    if (!string.IsNullOrWhiteSpace(loadUsers))
+        users = JsonSerializer.Deserialize<List<User>>(loadUsers, new JsonSerializerOptions {IncludeFields = true}) ?? new List<User>();
+}
+
+if (File.Exists(tradeData))
+{
+    string loadTrades = File.ReadAllText(tradeData);
+    if (!string.IsNullOrWhiteSpace(loadTrades))
+        tradingList = JsonSerializer.Deserialize<List<Trade>>(loadTrades, new JsonSerializerOptions {IncludeFields = true}) ?? new List<Trade>();
+}
 
 
 //test användare
@@ -40,7 +66,7 @@ while (running)
     {
 
         try { Console.Clear(); } catch { } //console.clear work around. tagit i från bloggen för att inte crasha debug.
-    
+
         Console.WriteLine("Welcome to The Trading System"); //meny
         System.Console.WriteLine(" "); //gillar att det blir ett hopp i texten
         System.Console.WriteLine("1. To login.");
@@ -80,6 +106,7 @@ while (running)
                 string? inputNewUsername = Console.ReadLine(); //detta ingår inte i uppgiften men jag ville ha ett anvädarnamn för jag tycker det blir tydligen vem som är användare. återanvänder detta även när man ska se vem som äger ett item och i bytes funktionen.
 
                 users.Add(new User(inputNewEmail!, inputNewPassword!, inputNewUsername!)); //lägger till i lista
+                SaveUser();
 
                 System.Console.WriteLine("A new user has been created");
                 System.Console.WriteLine($"You can now login as {inputNewUsername}"); //bara extra så det ser snyggare ut, samt sanity check
@@ -88,6 +115,7 @@ while (running)
 
             case "3": // stänga programmet
                 running = false;
+                SaveUser();
                 break;
             default: //vid felaktig inmatning i menyn
                 System.Console.WriteLine("Something went wrong. Please try again.");
@@ -95,8 +123,8 @@ while (running)
         }
     }
     else // menyn när man är inloggad
-    {   
-        try{Console.Clear();}catch{} 
+    {
+        try { Console.Clear(); } catch { }
 
         System.Console.WriteLine("Welcome to The Trading System");
         System.Console.WriteLine($"You're logged in as {activeUser}"); //kolla vem som är inloggad
@@ -111,14 +139,16 @@ while (running)
         switch (input)
         {
             case "1": //lägga till nytt item för trade
-             
+
                 activeUser.AddItem();
+                SaveUser();
+                
 
                 break;
             case "2": // se vilka Items du har lagt upp
 
                 System.Console.WriteLine("Here are all items you have uploaded for trade:");
-                activeUser.ShowOwnItem();                
+                activeUser.ShowOwnItem();
                 Console.ReadLine();
 
                 break;
@@ -176,6 +206,7 @@ while (running)
 
                 //lägg till i en trading lista
                 tradingList.Add(new Trade(fromusertrad, tousertrade, fromitemtrade, toitemtrade));
+                SaveTrade();
 
                 System.Console.WriteLine("trade request is now sent");
                 Console.ReadLine();
@@ -188,6 +219,9 @@ while (running)
 
                 System.Console.WriteLine("see you pending, Accepted, trades:");
                 System.Console.WriteLine("1 for pending");
+                System.Console.WriteLine("2. for Accepted");
+                System.Console.WriteLine("3. for Denied ");
+                System.Console.WriteLine("4. back");
 
                 string? input_see_trade = Console.ReadLine();
 
@@ -249,7 +283,7 @@ while (running)
 
                     case "2": //accpted trades
 
-                     foreach (Trade trade in tradingList) //loopa igenom trade listan
+                        foreach (Trade trade in tradingList) //loopa igenom trade listan
                         {
                             if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Accepted) //kolla så att det är trades som är skicka till en och att dom är pending
                             {
@@ -259,7 +293,7 @@ while (running)
                         break;
 
                     case "3": //denied trades
-                    
+
                         foreach (Trade trade in tradingList) //loopa igenom trade listan
                         {
                             if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Denied) //kolla så att det är trades som är skicka till en och att dom är pending
@@ -268,7 +302,7 @@ while (running)
                             }
                         }
                         break;
-                    case "4":
+                    case "4": //back
                         break;
 
 
@@ -277,11 +311,13 @@ while (running)
 
 
 
-            break;
+                break;
             case "9": //logga ut
+                SaveUser();
                 activeUser = null;
                 break;
             case "quit": // extra för att stänga helt programmet
+                SaveUser();
                 running = false;
                 break;
             default:
@@ -289,6 +325,14 @@ while (running)
                 break;
         }
     }
-    
-    
+}
+
+void SaveUser()
+{
+    string saveUsers = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true});
+    File.WriteAllText(userData, saveUsers);
+}
+void SaveTrade(){
+string saveTrades = JsonSerializer.Serialize(tradingList, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true });
+File.WriteAllText(tradeData, saveTrades);
 }
