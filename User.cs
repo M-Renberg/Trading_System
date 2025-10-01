@@ -2,7 +2,7 @@ using System.Buffers;
 
 namespace App;
 
-class User //: IUser
+class User
 {
 
     public string Username; // name som vissas 
@@ -10,7 +10,8 @@ class User //: IUser
     public string _password;   //för inloggning
     public List<Item> ItemList = new List<Item>();
 
-    public User () {}
+    public User () {} //till json så att det sparas ner
+
     public User(string email, string password, string username)
     {
         Email = email;
@@ -29,7 +30,7 @@ class User //: IUser
         return Username;
     }
 
-    public void AddItem()
+    public void AddItem() // lägga till item för trade
     {
 
         System.Console.WriteLine("Add Item for trade");
@@ -41,24 +42,23 @@ class User //: IUser
         System.Console.WriteLine("With description:");
         System.Console.WriteLine(itemDescription);
 
-        System.Console.WriteLine($"You want to add item {itemName} with description: {itemDescription}");
-        System.Console.WriteLine("Are you satisfied or would you like to change something?");
+        System.Console.WriteLine($"You have added item with name {itemName} and description: {itemDescription}");
+       // System.Console.WriteLine("Are you satisfied or would you like to change something?");
 
-        string? itemAddChoice = Console.ReadLine();
+        Console.ReadLine();
 
-        string? Owner = Username;
+        string? Owner = Username; // ser till att det blir rätt ägare
 
         ItemList.Add(new Item(itemName!, itemDescription!, Owner!));
 
     }
 
-    public void ShowOwnItem()
+    public void ShowOwnItem() //loopar fram ens items 
     {
-        int itemID = 0;
         foreach (Item i in ItemList) //foreach loop för att loopa igen listan med items
         {
 
-            System.Console.WriteLine($"Item id: {itemID}, Name: {i.Name}, Description: {i.Description}, Owner:{i.Owner}");
+            System.Console.WriteLine($"Name: {i.Name}, Description: {i.Description}, Owner:{i.Owner}");
 
         }
     }
