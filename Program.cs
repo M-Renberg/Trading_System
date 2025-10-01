@@ -193,9 +193,9 @@ while (running)
 
                 switch (input_see_trade)
                 {
-                
-                case "1":
-                    System.Console.WriteLine("here are you pending trades:");
+
+                    case "1":
+                        System.Console.WriteLine("here are you pending trades:");
 
                         int tradeSerialNum = 0;
 
@@ -236,7 +236,7 @@ while (running)
                                         System.Console.WriteLine("you have denied the trade");
                                         trade.Status = Trade.TradeStatus.Denied;
                                     }
-                                    
+
                                 }
                                 tradeSerialNum++;
                             }
@@ -245,8 +245,34 @@ while (running)
                         Console.ReadLine();
 
 
-                    Console.ReadLine();
-                break;    
+                        break;
+
+                    case "2": //accpted trades
+
+                     foreach (Trade trade in tradingList) //loopa igenom trade listan
+                        {
+                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Accepted) //kolla så att det är trades som är skicka till en och att dom är pending
+                            {
+                                System.Console.WriteLine($"Accepted trade from User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                            }
+                        }
+                        break;
+
+                    case "3": //denied trades
+                    
+                        foreach (Trade trade in tradingList) //loopa igenom trade listan
+                        {
+                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Denied) //kolla så att det är trades som är skicka till en och att dom är pending
+                            {
+                                System.Console.WriteLine($"Denied trade from User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                            }
+                        }
+                        break;
+                    case "4":
+                        break;
+
+
+
                 }
 
 
