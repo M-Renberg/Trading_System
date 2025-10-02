@@ -8,9 +8,9 @@ class User
     public string Username; // name som vissas 
     public string Email; //för inloggning
     public string _password;   //för inloggning
-    public List<Item> ItemList = new List<Item>();
+    public List<Item> ItemList = new List<Item>(); //item list
 
-    public User () {} //till json så att det sparas ner
+    public User() { } //till json så att det sparas ner
 
     public User(string email, string password, string username)
     {
@@ -19,13 +19,13 @@ class User
         Username = username;
     }
 
-    public bool TryLogin(string email, string password)
+    public bool TryLogin(string email, string password) //login funktion
     {
         return email == Email && password == _password;
     }
 
 
-    public override string ToString() //test för att försöka displaya användarnamn
+    public override string ToString() //för att kunna använda activeUser som ett användarnamn
     {
         return Username;
     }
@@ -43,7 +43,7 @@ class User
         System.Console.WriteLine(itemDescription);
 
         System.Console.WriteLine($"You have added item with name {itemName} and description: {itemDescription}");
-       // System.Console.WriteLine("Are you satisfied or would you like to change something?");
+        // System.Console.WriteLine("Are you satisfied or would you like to change something?");
 
         Console.ReadLine();
 
@@ -62,6 +62,8 @@ class User
 
         }
     }
+    
+    
     
 
 

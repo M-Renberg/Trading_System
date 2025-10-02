@@ -8,46 +8,15 @@ using App;
 Datamanager dm = new Datamanager();
 
 List<User> users = new List<User>(); //användar lista
-dm.LoadUser(users);
+dm.LoadUser(users); //ladda in från json fil till listan
 
 List<Trade> tradingList = new List<Trade>(); //trade lista
-dm.LoadTrade(tradingList);
+dm.LoadTrade(tradingList); //ladda in från json fil till listan
 
-// string dataDir = Path.Combine(Directory.GetCurrentDirectory(), "data"); 
-
-
-// string userData = Path.Combine(dataDir, "Users.json");
-// string tradeData = Path.Combine(dataDir, "Trades.json");
-
-// if (File.Exists(userData)) // hämta användare från users.json
-// {
-//     string loadUsers = File.ReadAllText(userData);
-//     if (!string.IsNullOrWhiteSpace(loadUsers))
-//         users = JsonSerializer.Deserialize<List<User>>(loadUsers, new JsonSerializerOptions {IncludeFields = true}) ?? new List<User>();
-// }
-
-// if (File.Exists(tradeData)) //hämta trade från trades.json
-// {
-//     string loadTrades = File.ReadAllText(tradeData);
-//     if (!string.IsNullOrWhiteSpace(loadTrades))
-//         tradingList = JsonSerializer.Deserialize<List<Trade>>(loadTrades, new JsonSerializerOptions {IncludeFields = true}) ?? new List<Trade>();
-// }
-
-
-//test användare         --Allt detta är bara test användare och items innan jag la till att man kunde spara kod
-// User testuser1 = new User("test", "test", "testuser");
-// User testuser2 = new User("arne", "arne", "arne aligator");
-// User testuser3 = new User("hej", "hej", "hejsan");
-// users.Add(testuser1);
-// users.Add(testuser2);
-// users.Add(testuser3);
-//test item
-// testuser1.ItemList.Add(new Item("testnamn", "testtext", testuser1.Username));
-// testuser3.ItemList.Add(new Item("godis", "1kg", testuser3.Username));
 
 User? activeUser = null; //ser till att användare är null(inte finns)
 
-bool running = true;
+bool running = true; //bool för while loop
 
 while (running) //while loop som kör programmet
 {
@@ -69,7 +38,7 @@ while (running) //while loop som kör programmet
 
         switch (input) //meny funktioner 
         {
-            case "1": //log in funktion
+            case "1": //login funktion
                 System.Console.WriteLine("The Trading System login");
                 System.Console.WriteLine("Please write your email:");
                 string? inputEmail = Console.ReadLine();
@@ -78,7 +47,7 @@ while (running) //while loop som kör programmet
 
                 foreach (User user in users) //letar och gemför sparade användare
                 {
-                    if (user.TryLogin(inputEmail!, inputPassword!))
+                    if (user.TryLogin(inputEmail!, inputPassword!)) //gemför email och lösenord
                     {
                         activeUser = user; //byta activeUser från null till den som loggar in
                         break;
@@ -118,7 +87,7 @@ while (running) //while loop som kör programmet
         try { Console.Clear(); } catch { }
 
         System.Console.WriteLine("Welcome to The Trading System"); //meny text
-        System.Console.WriteLine($"You're logged in as {activeUser}"); //kolla vem som är inloggad
+        System.Console.WriteLine($"You're logged in as {activeUser}"); //kolla vem som är inloggad. det var en sanity check för mig
         System.Console.WriteLine(" ");
         System.Console.WriteLine("1. Add an item for trade.");
         System.Console.WriteLine("2. show your own items");
@@ -178,8 +147,10 @@ while (running) //while loop som kör programmet
                 string? toitemtrade = itemToTrade.Name;
                 string? fromitemtrade = ownForTrade.Name;
                 //lägg till i en trading lista
+
                 tradingList.Add(new Trade(fromusertrad, tousertrade, fromitemtrade, toitemtrade)); //skapa trade classen
                 dm.SaveTrade(tradingList);//spara trade
+
                 System.Console.WriteLine("trade request is now sent"); //sanity check
                 Console.ReadLine();
                 break;
@@ -233,13 +204,14 @@ while (running) //while loop som kör programmet
                                     {
                                         System.Console.WriteLine("you have accpted the trade");
                                         trade.Status = Trade.TradeStatus.Accepted; //ändra enum
-                                       
+                                        dm.SaveTrade(tradingList);
+
                                     }
                                     else if (input_acceptdeny == "2") //deny
                                     {
                                         System.Console.WriteLine("you have denied the trade");
                                         trade.Status = Trade.TradeStatus.Denied; //ändra enum
-                                        
+                                        dm.SaveTrade(tradingList);
                                     }
 
                                 }
@@ -274,14 +246,17 @@ while (running) //while loop som kör programmet
                         break;
                     case "4": //back
                         break;
+                    default:
+                        System.Console.WriteLine("Something went wrong. Please try again.");
+                    break;
                 }
                 break;
             case "9": //logga ut
-                dm.SaveUser(users);
+                dm.SaveUser(users); //spara användare 
                 activeUser = null;
                 break;
             case "quit": // extra för att stänga helt programmet
-                dm.SaveUser(users);
+                dm.SaveUser(users); //spara användare
                 running = false;
                 break;
             default:
@@ -290,14 +265,3 @@ while (running) //while loop som kör programmet
         }
     }
 }
-
-// void SaveUser()
-// {
-//     string saveUsers = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true});
-//     File.WriteAllText(userData, saveUsers);
-// }
-// void SaveTrade()
-// {
-//     string saveTrades = JsonSerializer.Serialize(tradingList, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true });
-//     File.WriteAllText(tradeData, saveTrades);
-// }
