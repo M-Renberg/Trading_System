@@ -5,31 +5,33 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using App;
 
+Datamanager dm = new Datamanager();
 
-
-List<User> users = new List<User>(); //användar lista 
+List<User> users = new List<User>(); //användar lista
+dm.LoadUser(users);
 
 List<Trade> tradingList = new List<Trade>(); //trade lista
+dm.LoadTrade(tradingList);
 
-string dataDir = Path.Combine(Directory.GetCurrentDirectory(), "data"); 
+// string dataDir = Path.Combine(Directory.GetCurrentDirectory(), "data"); 
 
 
-string userData = Path.Combine(dataDir, "Users.json");
-string tradeData = Path.Combine(dataDir, "Trades.json");
+// string userData = Path.Combine(dataDir, "Users.json");
+// string tradeData = Path.Combine(dataDir, "Trades.json");
 
-if (File.Exists(userData)) // hämta användare från users.json
-{
-    string loadUsers = File.ReadAllText(userData);
-    if (!string.IsNullOrWhiteSpace(loadUsers))
-        users = JsonSerializer.Deserialize<List<User>>(loadUsers, new JsonSerializerOptions {IncludeFields = true}) ?? new List<User>();
-}
+// if (File.Exists(userData)) // hämta användare från users.json
+// {
+//     string loadUsers = File.ReadAllText(userData);
+//     if (!string.IsNullOrWhiteSpace(loadUsers))
+//         users = JsonSerializer.Deserialize<List<User>>(loadUsers, new JsonSerializerOptions {IncludeFields = true}) ?? new List<User>();
+// }
 
-if (File.Exists(tradeData)) //hämta trade från trades.json
-{
-    string loadTrades = File.ReadAllText(tradeData);
-    if (!string.IsNullOrWhiteSpace(loadTrades))
-        tradingList = JsonSerializer.Deserialize<List<Trade>>(loadTrades, new JsonSerializerOptions {IncludeFields = true}) ?? new List<Trade>();
-}
+// if (File.Exists(tradeData)) //hämta trade från trades.json
+// {
+//     string loadTrades = File.ReadAllText(tradeData);
+//     if (!string.IsNullOrWhiteSpace(loadTrades))
+//         tradingList = JsonSerializer.Deserialize<List<Trade>>(loadTrades, new JsonSerializerOptions {IncludeFields = true}) ?? new List<Trade>();
+// }
 
 
 //test användare         --Allt detta är bara test användare och items innan jag la till att man kunde spara kod
@@ -94,7 +96,7 @@ while (running) //while loop som kör programmet
                 string? inputNewUsername = Console.ReadLine(); //detta ingår inte i uppgiften men jag ville ha ett anvädarnamn för jag tycker det blir tydligen vem som är användare. återanvänder detta även när man ska se vem som äger ett item och i bytes funktionen.
 
                 users.Add(new User(inputNewEmail!, inputNewPassword!, inputNewUsername!)); //lägger till i lista
-                SaveUser(); //spara användare
+                dm.SaveUser(users); //spara användare
 
                 System.Console.WriteLine("A new user has been created");
                 System.Console.WriteLine($"You can now login as {inputNewUsername}"); //bara extra så det ser snyggare ut, samt sanity check
@@ -103,7 +105,7 @@ while (running) //while loop som kör programmet
 
             case "3": // stänga programmet
                 running = false; //dödar loopen
-                SaveUser(); //sparar användare
+                dm.SaveUser(users); //sparar användare
                 break;
 
             default: //vid felaktig inmatning i menyn
@@ -129,7 +131,7 @@ while (running) //while loop som kör programmet
         {
             case "1": //lägga till nytt item för trade
                 activeUser.AddItem(); //lägga till item
-                SaveUser(); //spara användare och item som är inne i user klassen             
+                dm.SaveUser(users); //spara användare och item som är inne i user klassen             
             break;
 
             case "2": // se vilka Items du har lagt upp
@@ -177,7 +179,7 @@ while (running) //while loop som kör programmet
                 string? fromitemtrade = ownForTrade.Name;
                 //lägg till i en trading lista
                 tradingList.Add(new Trade(fromusertrad, tousertrade, fromitemtrade, toitemtrade)); //skapa trade classen
-                SaveTrade();//spara trade
+                dm.SaveTrade(tradingList);//spara trade
                 System.Console.WriteLine("trade request is now sent"); //sanity check
                 Console.ReadLine();
                 break;
@@ -211,14 +213,17 @@ while (running) //while loop som kör programmet
 
                         string? input_pending = Console.ReadLine();
 
-                        int.TryParse(input_pending, out int input_pending_int);
+                        int.TryParse(input_pending, out int input_pending_int); //gör om input till int
+
+                        int tradeSerialNum_selected = 1; //gjorde en ny in för att slippa skriva logik att calibrera om den andra.
+
                         foreach (Trade trade in tradingList) //loopa igenom trade listan
                         {
                             if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Pending) //kolla så att det är trades som är skicka till en och att dom är pending
                             {
-                                if (input_pending_int == tradeSerialNum)
+                                if (input_pending_int == tradeSerialNum_selected)
                                 {
-                                    System.Console.WriteLine($"Trade nr: {tradeSerialNum} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                                    System.Console.WriteLine($"Trade nr: {tradeSerialNum_selected} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
                                     System.Console.WriteLine("Will you accept or deny this trade?");
                                     System.Console.WriteLine("1. for accept");
                                     System.Console.WriteLine("2. for deny");
@@ -226,17 +231,19 @@ while (running) //while loop som kör programmet
 
                                     if (input_acceptdeny == "1") //accept
                                     {
-                                        System.Console.WriteLine("you have accpted the rade");
+                                        System.Console.WriteLine("you have accpted the trade");
                                         trade.Status = Trade.TradeStatus.Accepted; //ändra enum
+                                       
                                     }
                                     else if (input_acceptdeny == "2") //deny
                                     {
                                         System.Console.WriteLine("you have denied the trade");
                                         trade.Status = Trade.TradeStatus.Denied; //ändra enum
+                                        
                                     }
 
                                 }
-                                tradeSerialNum++; //kontrollera fram till man hittar rätt id
+                                tradeSerialNum_selected++; //kontrollera fram till man hittar rätt id
                             }
                         }
                         Console.ReadLine();
@@ -251,6 +258,7 @@ while (running) //while loop som kör programmet
                                 System.Console.WriteLine($"Accepted trade from User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
                             }
                         }
+                        Console.ReadLine();
                         break;
 
                     case "3": //denied trades
@@ -262,17 +270,18 @@ while (running) //while loop som kör programmet
                                 System.Console.WriteLine($"Denied trade from User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
                             }
                         }
+                        Console.ReadLine();
                         break;
                     case "4": //back
                         break;
                 }
                 break;
             case "9": //logga ut
-                SaveUser();
+                dm.SaveUser(users);
                 activeUser = null;
                 break;
             case "quit": // extra för att stänga helt programmet
-                SaveUser();
+                dm.SaveUser(users);
                 running = false;
                 break;
             default:
@@ -282,13 +291,13 @@ while (running) //while loop som kör programmet
     }
 }
 
-void SaveUser()
-{
-    string saveUsers = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true});
-    File.WriteAllText(userData, saveUsers);
-}
-void SaveTrade()
-{
-    string saveTrades = JsonSerializer.Serialize(tradingList, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true });
-    File.WriteAllText(tradeData, saveTrades);
-}
+// void SaveUser()
+// {
+//     string saveUsers = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true});
+//     File.WriteAllText(userData, saveUsers);
+// }
+// void SaveTrade()
+// {
+//     string saveTrades = JsonSerializer.Serialize(tradingList, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true });
+//     File.WriteAllText(tradeData, saveTrades);
+// }

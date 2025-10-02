@@ -1,3 +1,16 @@
 [
-  {}
+  {
+    "FromUser": null,
+    "ToUser": null,
+    "FromUserItem": null,
+    "ToUserItem": null,
+    "Status": 2
+  },
+  {
+    "FromUser": "testuser",
+    "ToUser": "hejsan",
+    "FromUserItem": "testnamn",
+    "ToUserItem": "godis",
+    "Status": 2
+  }
 ]
