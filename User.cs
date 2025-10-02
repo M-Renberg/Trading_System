@@ -24,12 +24,6 @@ class User
         return email == Email && password == _password;
     }
 
-
-    public override string ToString() //för att kunna använda activeUser som ett användarnamn
-    {
-        return Username;
-    }
-
     public void AddItem() // lägga till item för trade
     {
 

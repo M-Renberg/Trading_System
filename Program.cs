@@ -87,7 +87,7 @@ while (running) //while loop som kör programmet
         try { Console.Clear(); } catch { }
 
         System.Console.WriteLine("Welcome to The Trading System"); //meny text
-        System.Console.WriteLine($"You're logged in as {activeUser}"); //kolla vem som är inloggad. det var en sanity check för mig
+        System.Console.WriteLine($"You're logged in as {activeUser.Username}"); //kolla vem som är inloggad. det var en sanity check för mig
         System.Console.WriteLine(" ");
         System.Console.WriteLine("1. Add an item for trade.");
         System.Console.WriteLine("2. show your own items");
@@ -123,14 +123,36 @@ while (running) //while loop som kör programmet
                 }
                 System.Console.WriteLine("Select the user you would like to trade with:");
                 string? selectUserForTrade = Console.ReadLine(); //val av användare att byta med
-                var userToTrade = users.FirstOrDefault(u => u.Username == selectUserForTrade); //gör valet till en variabel
+
+                User? userToTrade = null; //variabel för user man vill byta med
+                
+                foreach (User user in users) //loopa users
+                {
+                    if (user.Username == selectUserForTrade) //om användarnamnet stämmer
+                    {
+                        userToTrade = user; //gör variabel till den User
+                        break;
+                    }
+                }
+
                 foreach (Item item in userToTrade.ItemList) //vissa den valda användarens items
                 {
                     System.Console.WriteLine($"Name: {item.Name}, Description: {item.Description}, Owner: {item.Owner}");
                 }
                 System.Console.WriteLine("Write the name of the item you wish to trade");
                 string? selectItem = Console.ReadLine(); //val an item
-                var itemToTrade = userToTrade.ItemList.FirstOrDefault(i => i.Name == selectItem); //gör item till en variable
+                
+                Item? itemToTrade = null; //variabel item man vill ha från bytet
+
+                foreach (Item item in userToTrade.ItemList) //loop from item från users lista
+                {
+                    if (item.Name == selectItem) //kolla så namnet är rätt
+                    {
+                        itemToTrade = item; //gör variabel till det namnet
+                        break;
+                    }
+                }
+
                 System.Console.WriteLine($"You have selected {itemToTrade.Name} from user {userToTrade}"); //sanity check för att kolla att valet blev rätt
                 System.Console.WriteLine(" ");
                 foreach (Item item in activeUser.ItemList) //loopa fram ens egna items
