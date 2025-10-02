@@ -52,6 +52,12 @@ while (running) //while loop som kör programmet
                         activeUser = user; //byta activeUser från null till den som loggar in
                         break;
                     }
+                    else //om något inte gick fel vid inloggningen
+                    {
+                        System.Console.WriteLine("Somwthing went wrong");
+                        Console.ReadLine();
+                        break;
+                    }
                 }
                 break;
 
@@ -59,10 +65,28 @@ while (running) //while loop som kör programmet
                 System.Console.WriteLine("The Trading System create account");
                 System.Console.WriteLine("Please write the email you would like to use:");
                 string? inputNewEmail = Console.ReadLine(); // inloggnings mail
+                if (inputNewEmail == null) //så att man inte kan ha null som användare
+                {
+                    System.Console.WriteLine("Something went wrong");
+                    Console.ReadLine();
+                    break;
+                }
                 System.Console.WriteLine("Please enter the password you would like to use:");
                 string? inputNewPassword = Console.ReadLine(); // inloggnings lösenord
+                if (inputNewPassword == null) //så att man inte kan ha null som lösenord
+                {
+                    System.Console.WriteLine("Something went wrong");
+                    Console.ReadLine();
+                    break;
+                }
                 System.Console.WriteLine("Please enter the username you would like to display:");
                 string? inputNewUsername = Console.ReadLine(); //detta ingår inte i uppgiften men jag ville ha ett anvädarnamn för jag tycker det blir tydligen vem som är användare. återanvänder detta även när man ska se vem som äger ett item och i bytes funktionen.
+                if (inputNewUsername == null) //så att man inte kan ha null som användarnamn
+                {
+                    System.Console.WriteLine("Something went wrong");
+                    Console.ReadLine();
+                    break;
+                }
 
                 users.Add(new User(inputNewEmail!, inputNewPassword!, inputNewUsername!)); //lägger till i lista
                 dm.SaveUser(users); //spara användare
@@ -73,8 +97,8 @@ while (running) //while loop som kör programmet
                 break;
 
             case "3": // stänga programmet
-                running = false; //dödar loopen
                 dm.SaveUser(users); //sparar användare
+                running = false; //dödar loopen
                 break;
 
             default: //vid felaktig inmatning i menyn
@@ -135,7 +159,7 @@ while (running) //while loop som kör programmet
                     }
                 }
 
-                foreach (Item item in userToTrade.ItemList) //vissa den valda användarens items
+                foreach (Item item in userToTrade!.ItemList) //vissa den valda användarens items
                 {
                     System.Console.WriteLine($"Name: {item.Name}, Description: {item.Description}, Owner: {item.Owner}");
                 }
@@ -153,7 +177,7 @@ while (running) //while loop som kör programmet
                     }
                 }
 
-                System.Console.WriteLine($"You have selected {itemToTrade.Name} from user {userToTrade}"); //sanity check för att kolla att valet blev rätt
+                System.Console.WriteLine($"You have selected {itemToTrade!.Name} from user {userToTrade}"); //sanity check för att kolla att valet blev rätt
                 System.Console.WriteLine(" ");
                 foreach (Item item in activeUser.ItemList) //loopa fram ens egna items
                 {
@@ -167,7 +191,7 @@ while (running) //while loop som kör programmet
                 string? fromusertrad = activeUser.Username; //gör om mina variablar till strings så att jag kan lägga in dom i en trade class
                 string? tousertrade = userToTrade.Username;
                 string? toitemtrade = itemToTrade.Name;
-                string? fromitemtrade = ownForTrade.Name;
+                string? fromitemtrade = ownForTrade!.Name;
                 //lägg till i en trading lista
 
                 tradingList.Add(new Trade(fromusertrad, tousertrade, fromitemtrade, toitemtrade)); //skapa trade classen
@@ -227,6 +251,7 @@ while (running) //while loop som kör programmet
                                         System.Console.WriteLine("you have accpted the trade");
                                         trade.Status = Trade.TradeStatus.Accepted; //ändra enum
                                         dm.SaveTrade(tradingList);
+                                        //kommentar till mig själv!!!! lägga till så att man tar bort från båda users item listor??????
 
                                     }
                                     else if (input_acceptdeny == "2") //deny
@@ -245,17 +270,24 @@ while (running) //while loop som kör programmet
 
                     case "2": //accpted trades
 
+                        System.Console.WriteLine("Accepted Trades:");
+                        System.Console.WriteLine(" ");
                         foreach (Trade trade in tradingList) //loopa igenom trade listan
                         {
                             if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Accepted) //kolla så att det är trades som är skicka till en och att dom är pending
                             {
+
                                 System.Console.WriteLine($"Accepted trade from User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                                System.Console.WriteLine($"Please contact {trade.FromUser} to arrange a pick up/ trade point");
                             }
                         }
                         Console.ReadLine();
                         break;
 
                     case "3": //denied trades
+
+                        System.Console.WriteLine("Declined Trades:");
+                        System.Console.WriteLine(" ");
 
                         foreach (Trade trade in tradingList) //loopa igenom trade listan
                         {
