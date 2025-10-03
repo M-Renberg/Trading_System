@@ -1,15 +1,15 @@
 namespace App;
 
-class Item
+class Item //item klass
 {
-    public string Name;
-    public string Description;
+    public string Name; //namn på itemet
+    public string Description; //beskrivning
     public string Owner; // vill kunna lägga till med som ägare till produkten man ska byta
 
 
 
 
-    public Item(string name, string description, string owner)
+    public Item(string name, string description, string owner) //konstruktor
     {
         Name = name;
         Description = description;

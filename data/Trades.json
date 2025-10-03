@@ -12,5 +12,19 @@
     "FromUserItem": "testnamn",
     "ToUserItem": "godis",
     "Status": 2
+  },
+  {
+    "FromUser": "mumme_hellum",
+    "ToUser": "arne aligator",
+    "FromUserItem": "mumme",
+    "ToUserItem": "godis",
+    "Status": 1
+  },
+  {
+    "FromUser": "arne aligator",
+    "ToUser": "hejsan",
+    "FromUserItem": "godis",
+    "ToUserItem": "kaka",
+    "Status": 2
   }
 ]

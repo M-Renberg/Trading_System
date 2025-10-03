@@ -5,14 +5,14 @@ namespace App;
 class User
 {
 
-    public string Username; // name som vissas 
+    public string Username; // använder detta som det id i trades
     public string Email; //för inloggning
     public string _password;   //för inloggning
     public List<Item> ItemList = new List<Item>(); //item list
 
-    public User() { } //till json så att det sparas ner
+    public User() { } //till json så att det sparas ner rätt 
 
-    public User(string email, string password, string username)
+    public User(string email, string password, string username) //konstruktor
     {
         Email = email;
         _password = password;
@@ -21,7 +21,7 @@ class User
 
     public bool TryLogin(string email, string password) //login funktion
     {
-        return email == Email && password == _password;
+        return email == Email && password == _password; //kollar så att email och lösenord stämmer med det man skickar in.
     }
 
     public void AddItem() // lägga till item för trade
@@ -43,7 +43,7 @@ class User
 
         string? Owner = Username; // ser till att det blir rätt ägare
 
-        ItemList.Add(new Item(itemName!, itemDescription!, Owner!));
+        ItemList.Add(new Item(itemName!, itemDescription!, Owner!)); //lägg till item i lista
 
     }
 
@@ -52,7 +52,7 @@ class User
         foreach (Item i in ItemList) //foreach loop för att loopa igen listan med items
         {
 
-            System.Console.WriteLine($"Name: {i.Name}, Description: {i.Description}, Owner:{i.Owner}");
+            System.Console.WriteLine($"Name: {i.Name}, Description: {i.Description}, Owner:{i.Owner}"); //skriv ut
 
         }
     }

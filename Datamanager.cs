@@ -16,15 +16,15 @@ class Datamanager //save and load class
 
     }
 
-public void LoadUser(List<User> users) //ladda in sparade användare i listan
+public void LoadUser(List<User> users) //metod för att ladda in sparade användare i listan
     {
         if (File.Exists(userData)) //kolla så att filen finns
         {
-            string loadUsers = File.ReadAllText(userData); //skapar en variabel med read data
+            string loadUsers = File.ReadAllText(userData); //skapar en variabel som läser all text i json filen
             if (!string.IsNullOrWhiteSpace(loadUsers)) //kollar variabel
             { 
                 var loadedUsers = JsonSerializer.Deserialize<List<User>>(loadUsers, new JsonSerializerOptions { IncludeFields = true }); //ny variabel för att göra json listan
-                if (loadedUsers != null) //kollar den
+                if (loadedUsers != null) //kollar så den inte är null
                 {
                     users.Clear(); //ränsar om det finns något i listan
                     users.AddRange(loadedUsers); //laddar in det sparade i listan
@@ -34,15 +34,15 @@ public void LoadUser(List<User> users) //ladda in sparade användare i listan
         }
     }
 
-    public void LoadTrade(List<Trade> tradingList) //ladda in sparade användare i listan
+    public void LoadTrade(List<Trade> tradingList) //metod för att ladda in sparade tradaes i listan
     {
         if (File.Exists(tradeData)) //kolla så att filen finns
         {
-            string loadTrades = File.ReadAllText(tradeData); //skapar en variabel med read data
+            string loadTrades = File.ReadAllText(tradeData); //skapar en variabel som läser in att data från json filen.
             if (!string.IsNullOrWhiteSpace(loadTrades)) //kollar variabel
             {
                 var loadedTrades = JsonSerializer.Deserialize<List<Trade>>(loadTrades, new JsonSerializerOptions { IncludeFields = true }); //ny variabel för att göra json listan
-                if (loadedTrades != null) // kollar den
+                if (loadedTrades != null) // kollar den är null
                 {
                     tradingList.Clear(); //tömmer listan
                     tradingList.AddRange(loadedTrades); //laddar inte det sparade i listan
@@ -52,12 +52,12 @@ public void LoadUser(List<User> users) //ladda in sparade användare i listan
         }
     }
 
-    public void SaveUser(List<User> users) //spara användare
+    public void SaveUser(List<User> users) //metod för att spara användare
     {
         string saveUsers = JsonSerializer.Serialize(users, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true }); //gör en sträng som json kan använda för att spara ner
         File.WriteAllText(userData, saveUsers); //spara det i json
     }
-    public void SaveTrade(List<Trade> tradingList) //spara trades
+    public void SaveTrade(List<Trade> tradingList) //metod för att spara trades
     {
         string saveTrades = JsonSerializer.Serialize(tradingList, new JsonSerializerOptions { WriteIndented = true, IncludeFields = true }); //gör en sträng som json kan använda för att spara ner
         File.WriteAllText(tradeData, saveTrades); //spara den i json

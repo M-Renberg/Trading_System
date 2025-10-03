@@ -5,14 +5,13 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using App;
 
-Datamanager dm = new Datamanager();
+Datamanager dm = new Datamanager(); //anropa Datamanager klassen
 
 List<User> users = new List<User>(); //användar lista
 dm.LoadUser(users); //ladda in från json fil till listan
 
 List<Trade> tradingList = new List<Trade>(); //trade lista
 dm.LoadTrade(tradingList); //ladda in från json fil till listan
-
 
 User? activeUser = null; //ser till att användare är null(inte finns)
 
@@ -34,7 +33,7 @@ while (running) //while loop som kör programmet
 
         string? input = Console.ReadLine(); //meny input
 
-        Debug.Assert(input != null);
+        Debug.Assert(input != null); //en debug jag lät vara kvar för att vissa att jag använt det typ
 
         switch (input) //meny funktioner 
         {
@@ -50,12 +49,6 @@ while (running) //while loop som kör programmet
                     if (user.TryLogin(inputEmail!, inputPassword!)) //gemför email och lösenord
                     {
                         activeUser = user; //byta activeUser från null till den som loggar in
-                        break;
-                    }
-                    else //om något inte gick fel vid inloggningen
-                    {
-                        System.Console.WriteLine("Somwthing went wrong");
-                        Console.ReadLine();
                         break;
                     }
                 }
@@ -222,25 +215,26 @@ while (running) //while loop som kör programmet
                             if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Pending) //kolla så att det är trades som är skicka till en och att dom är pending
                             {
                                 System.Console.WriteLine($"Trade nr: {tradeSerialNum} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                                tradeSerialNum++; //plus på fake id efter att en rad skrivits ut
+
                             }
-                            tradeSerialNum++; //plus på fake id efter att en rad skrivits ut
                         }
 
                         System.Console.WriteLine("select trade nr to accept or deny trade");
-
                         string? input_pending = Console.ReadLine();
+
+                        tradeSerialNum = 0; //gjorde en ny in för att slippa skriva logik att calibrera om den andra.
 
                         int.TryParse(input_pending, out int input_pending_int); //gör om input till int
 
-                        int tradeSerialNum_selected = 1; //gjorde en ny in för att slippa skriva logik att calibrera om den andra.
 
                         foreach (Trade trade in tradingList) //loopa igenom trade listan
                         {
                             if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Pending) //kolla så att det är trades som är skicka till en och att dom är pending
                             {
-                                if (input_pending_int == tradeSerialNum_selected)
+                                if (input_pending_int == tradeSerialNum)
                                 {
-                                    System.Console.WriteLine($"Trade nr: {tradeSerialNum_selected} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
+                                    System.Console.WriteLine($"Trade nr: {tradeSerialNum} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
                                     System.Console.WriteLine("Will you accept or deny this trade?");
                                     System.Console.WriteLine("1. for accept");
                                     System.Console.WriteLine("2. for deny");
@@ -262,7 +256,7 @@ while (running) //while loop som kör programmet
                                     }
 
                                 }
-                                tradeSerialNum_selected++; //kontrollera fram till man hittar rätt id
+                                tradeSerialNum++; //kontrollera fram till man hittar rätt id
                             }
                         }
                         Console.ReadLine();

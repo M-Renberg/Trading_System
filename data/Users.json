@@ -33,7 +33,18 @@
     "Username": "arne aligator",
     "Email": "arne",
     "_password": "arne",
-    "ItemList": []
+    "ItemList": [
+      {
+        "Name": "godis",
+        "Description": "ca 2kg",
+        "Owner": "arne aligator"
+      },
+      {
+        "Name": "tandborste",
+        "Description": "aldrig anv\u00E4nd",
+        "Owner": "arne aligator"
+      }
+    ]
   },
   {
     "Username": "hejsan",
@@ -44,6 +55,11 @@
         "Name": "godis",
         "Description": "1kg",
         "Owner": "hejsan"
+      },
+      {
+        "Name": "kaka",
+        "Description": "inte s\u00E5 god",
+        "Owner": "hejsan"
       }
     ]
   },
@@ -52,5 +68,17 @@
     "Email": "pelle",
     "_password": "pelle",
     "ItemList": []
+  },
+  {
+    "Username": "mumme_hellum",
+    "Email": "emelie",
+    "_password": "mumme",
+    "ItemList": [
+      {
+        "Name": "mumme",
+        "Description": "en katt",
+        "Owner": "mumme_hellum"
+      }
+    ]
   }
 ]
