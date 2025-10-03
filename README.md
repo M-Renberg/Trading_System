@@ -40,3 +40,5 @@ i pending så loopas alla pending förfrågning fram genom att filtrera borta al
 accept och deny är egentligen samma loop men utan att kunna göra några val. 
 
 jag antar att det är det hela i systemet. 
+
+updatering 3/10: så jag satt och tänkte att jag skulle se om jag kunde göra koden "snyggare" och bestämde mig för att göra om i trading. jag tog all kod från pending/accepted/denied och flyttade in det till Trade.cs och byggde dom där. något jag upptänkte var att jag behövde kalla på trade men kände inte för att lägga in en massa data för konstruktorn bara för att kolla på den så jag valde att göra som static. tänkte att eftersom dom mer eller mindre bara tar hamn om val och att loopa fram specifika listor så borde detta inte vara något som påverkar systemet negative. den tar ju inte han om listor eller klasser i sig själv utan bara ändrar på enum och detta borde göra att programmet fortfarade skulle gå att utveckla utan att en "färdig verison" skulle vara påverkad på ett dålig sätt.
