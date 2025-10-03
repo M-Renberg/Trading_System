@@ -26,5 +26,12 @@
     "FromUserItem": "godis",
     "ToUserItem": "kaka",
     "Status": 2
+  },
+  {
+    "FromUser": "pelle",
+    "ToUser": "mumme_hellum",
+    "FromUserItem": "dator",
+    "ToUserItem": "mumme",
+    "Status": 3
   }
 ]

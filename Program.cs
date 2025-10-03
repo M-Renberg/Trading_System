@@ -7,6 +7,7 @@ using App;
 
 Datamanager dm = new Datamanager(); //anropa Datamanager klassen
 
+
 List<User> users = new List<User>(); //användar lista
 dm.LoadUser(users); //ladda in från json fil till listan
 
@@ -203,94 +204,19 @@ while (running) //while loop som kör programmet
                 System.Console.WriteLine("4. back");
 
                 string? input_see_trade = Console.ReadLine();
-                switch (input_see_trade)
+                switch (input_see_trade) //meny for pending, accept, deny
                 {
                     case "1": //pending
-                        System.Console.WriteLine("here are you pending trades:");
 
-                        int tradeSerialNum = 0; //fake id
-
-                        foreach (Trade trade in tradingList) //loopa igenom trade listan
-                        {
-                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Pending) //kolla så att det är trades som är skicka till en och att dom är pending
-                            {
-                                System.Console.WriteLine($"Trade nr: {tradeSerialNum} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
-                                tradeSerialNum++; //plus på fake id efter att en rad skrivits ut
-
-                            }
-                        }
-
-                        System.Console.WriteLine("select trade nr to accept or deny trade");
-                        string? input_pending = Console.ReadLine();
-
-                        tradeSerialNum = 0; //gjorde en ny in för att slippa skriva logik att calibrera om den andra.
-
-                        int.TryParse(input_pending, out int input_pending_int); //gör om input till int
-
-
-                        foreach (Trade trade in tradingList) //loopa igenom trade listan
-                        {
-                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Pending) //kolla så att det är trades som är skicka till en och att dom är pending
-                            {
-                                if (input_pending_int == tradeSerialNum)
-                                {
-                                    System.Console.WriteLine($"Trade nr: {tradeSerialNum} User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
-                                    System.Console.WriteLine("Will you accept or deny this trade?");
-                                    System.Console.WriteLine("1. for accept");
-                                    System.Console.WriteLine("2. for deny");
-                                    string? input_acceptdeny = Console.ReadLine();
-
-                                    if (input_acceptdeny == "1") //accept
-                                    {
-                                        System.Console.WriteLine("you have accpted the trade");
-                                        trade.Status = Trade.TradeStatus.Accepted; //ändra enum
-                                        dm.SaveTrade(tradingList);
-                                        //kommentar till mig själv!!!! lägga till så att man tar bort från båda users item listor??????
-
-                                    }
-                                    else if (input_acceptdeny == "2") //deny
-                                    {
-                                        System.Console.WriteLine("you have denied the trade");
-                                        trade.Status = Trade.TradeStatus.Denied; //ändra enum
-                                        dm.SaveTrade(tradingList);
-                                    }
-
-                                }
-                                tradeSerialNum++; //kontrollera fram till man hittar rätt id
-                            }
-                        }
-                        Console.ReadLine();
+                        Trade.PendingTrade(tradingList, activeUser);
                         break;
 
                     case "2": //accpted trades
-
-                        System.Console.WriteLine("Accepted Trades:");
-                        System.Console.WriteLine(" ");
-                        foreach (Trade trade in tradingList) //loopa igenom trade listan
-                        {
-                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Accepted) //kolla så att det är trades som är skicka till en och att dom är pending
-                            {
-
-                                System.Console.WriteLine($"Accepted trade from User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
-                                System.Console.WriteLine($"Please contact {trade.FromUser} to arrange a pick up/ trade point");
-                            }
-                        }
-                        Console.ReadLine();
+                        Trade.AcceptedTrade(tradingList, activeUser);
                         break;
 
                     case "3": //denied trades
-
-                        System.Console.WriteLine("Declined Trades:");
-                        System.Console.WriteLine(" ");
-
-                        foreach (Trade trade in tradingList) //loopa igenom trade listan
-                        {
-                            if (activeUser.Username == trade.ToUser && trade.Status == Trade.TradeStatus.Denied) //kolla så att det är trades som är skicka till en och att dom är pending
-                            {
-                                System.Console.WriteLine($"Denied trade from User: {trade.FromUser} wish to trade you item {trade.ToUserItem} for {trade.FromUserItem}");
-                            }
-                        }
-                        Console.ReadLine();
+                        Trade.DeniedTrade(tradingList, activeUser);
                         break;
                     case "4": //back
                         break;

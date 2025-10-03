@@ -67,7 +67,13 @@
     "Username": "pelle",
     "Email": "pelle",
     "_password": "pelle",
-    "ItemList": []
+    "ItemList": [
+      {
+        "Name": "dator",
+        "Description": "fr\u00E5n2009",
+        "Owner": "pelle"
+      }
+    ]
   },
   {
     "Username": "mumme_hellum",
